@@ -1,6 +1,7 @@
 using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ProEvento.API.Data;
 using ProEvento.API.Models;
 
 namespace ProEvento.API.Controllers
@@ -8,45 +9,31 @@ namespace ProEvento.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class EventoController : ControllerBase
-    {
+    {                
+        private readonly DataContext _context;
 
-        public IEnumerable<Evento> _evento = new Evento[]
-            {
-                new Evento()
-                {
-                    EventoId = 1,
-                    Local = "Belo Horizonte",
-                    DataEvento = DateTime.Now.AddDays(2).ToString(),
-                    Tema = "Angular 11 e .NET 5",
-                    QuantidadeDePessoas = 250,
-                    Lote = "1º Lote",
-                    ImagemUrl= "C:fotoTeste.png"
-                },
-                new Evento()
-                {
-                    EventoId = 2,
-                    Local = "Belo Horizonte",
-                    DataEvento = DateTime.Now.AddDays(2).ToString(),
-                    Tema = "Angular 11 e .NET 5",
-                    QuantidadeDePessoas = 250,
-                    Lote = "1º Lote",
-                    ImagemUrl= "C:fotoTeste.png"
-                },
-            };
-        public EventoController()
+        public EventoController(DataContext context)
         {
+            _context = context;
         }
 
         [HttpGet(Name = "GetEvento")]
         public IEnumerable<Evento> Get()
         {
-            return _evento;
+            return _context.Eventos;
         }
 
         [HttpGet("{id}")]
         public Evento GetById(int id)
         {
-            return _evento.FirstOrDefault(evento => evento.EventoId == id);
+            var eventoPorId = _context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
+
+            //if (eventoPorId == null)
+            //{
+            //    return "Não foi encontrado nenhum evento com esse ID";
+            //}
+
+            return eventoPorId;
         }
     }
 }

@@ -1,9 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using ProEvento.API.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<DataContext>(context => context.UseSqlite(builder.Configuration.GetConnectionString("ConnStrSqLite")));
 
 var app = builder.Build();
 
