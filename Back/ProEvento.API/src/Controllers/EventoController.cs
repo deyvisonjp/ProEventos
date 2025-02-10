@@ -1,6 +1,4 @@
-using System.Threading;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using ProEvento.API.Data;
 using ProEvento.API.Models;
 
@@ -17,14 +15,14 @@ namespace ProEvento.API.Controllers
             _context = context;
         }
 
-        [HttpGet(Name = "GetEvento")]
-        public IEnumerable<Evento> Get()
+        [HttpGet]
+        public IEnumerable<Evento> GetEventos()
         {
             return _context.Eventos;
         }
 
         [HttpGet("{id}")]
-        public Evento GetById(int id)
+        public Evento GetEventoById(int id)
         {
             var eventoPorId = _context.Eventos.FirstOrDefault(evento => evento.EventoId == id);
 
