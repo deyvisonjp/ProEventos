@@ -1,0 +1,16 @@
+.navbar-brand {
+    font-weight: bold;
+    margin-left: 1rem;
+}
+.nav-link {
+    transition: color 0.3s ease;
+}
+.nav-link:hover {
+    color: #007bff;
+}
+.offcanvas-header {
+    background-color: #f8f9fa;
+}
+.offcanvas-body {
+    background-color: #ffffff;
+}
