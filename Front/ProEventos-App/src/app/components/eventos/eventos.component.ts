@@ -3,10 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @Component({
   selector: 'app-eventos',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, FontAwesomeModule],
   templateUrl: './eventos.component.html',
   styleUrl: './eventos.component.scss'
 })
