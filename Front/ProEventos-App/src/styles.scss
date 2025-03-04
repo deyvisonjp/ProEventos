@@ -1,6 +1,15 @@
 /* Importing Bootstrap SCSS file. */
 @use 'bootstrap/scss/bootstrap';
 
+
+// regular style toast e spinner
+@use 'ngx-toastr/toastr';
+
+@use 'ngx-spinner/animations/ball-scale-multiple';
+@use 'ngx-spinner/animations/ball-clip-rotate';
+
+
+
 * {
     font-family: Roboto;
 }

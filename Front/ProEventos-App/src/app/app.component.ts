@@ -1,14 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { EventosComponent } from "./components/eventos/eventos.component";
-import { NavComponent } from "./components/nav/nav.component";
+import { NavComponent } from "./shared/nav/nav.component";
+import { DatePipe } from '@angular/common';
+import { NgxSpinnerModule, NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, EventosComponent, NavComponent],
+  standalone: true,
+  imports: [RouterOutlet, NavComponent, NgxSpinnerModule],
+  providers: [DatePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  constructor(private spinner: NgxSpinnerService) {}
+
   title = 'ProEventos-App';
+
+  ngOnInit() {
+    this.spinner.show();
+  
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000); // Aguarda 5 segundos
+  }
+  
 }
