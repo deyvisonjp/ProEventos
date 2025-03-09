@@ -1,11 +1,11 @@
 import {
+  ComponentLoaderFactory
+} from "./chunk-QRW7HVIE.js";
+import {
   AnimationBuilder,
   animate,
   style
 } from "./chunk-AGUTE5HK.js";
-import {
-  ComponentLoaderFactory
-} from "./chunk-QRW7HVIE.js";
 import {
   NgClass
 } from "./chunk-N7HKFVPJ.js";

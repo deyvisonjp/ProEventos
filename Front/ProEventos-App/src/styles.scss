@@ -1,14 +1,9 @@
-/* Importing Bootstrap SCSS file. */
-@use 'bootstrap/scss/bootstrap';
-
-
-// regular style toast e spinner
+@use 'bootstrap/scss/bootstrap' as *;
+@use 'bootswatch/dist/journal/variables' as minty-variables;
+@use 'bootswatch/dist/journal/bootstrap' as minty-bootstrap;
 @use 'ngx-toastr/toastr';
-
 @use 'ngx-spinner/animations/ball-scale-multiple';
 @use 'ngx-spinner/animations/ball-clip-rotate';
-
-
 
 * {
     font-family: Roboto;
