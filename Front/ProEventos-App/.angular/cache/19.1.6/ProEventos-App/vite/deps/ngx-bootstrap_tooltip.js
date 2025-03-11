@@ -6,10 +6,10 @@ import {
   getBsVer,
   parseTriggers,
   warnOnce
-} from "./chunk-QRW7HVIE.js";
+} from "./chunk-MSWWWYLN.js";
 import {
   CommonModule
-} from "./chunk-N7HKFVPJ.js";
+} from "./chunk-7F4KR3KK.js";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -22,8 +22,6 @@ import {
   Output,
   Renderer2,
   ViewContainerRef,
-  __decorate,
-  __metadata,
   setClassMetadata,
   timer,
   ɵɵProvidersFeature,
@@ -40,7 +38,11 @@ import {
   ɵɵelementStart,
   ɵɵprojection,
   ɵɵprojectionDef
-} from "./chunk-VWNYEFNH.js";
+} from "./chunk-R3VAZ7SQ.js";
+import {
+  __decorate,
+  __metadata
+} from "./chunk-EPAV4CNQ.js";
 
 // node_modules/ngx-bootstrap/tooltip/fesm2022/ngx-bootstrap-tooltip.mjs
 var _c0 = ["*"];

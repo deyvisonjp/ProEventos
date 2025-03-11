@@ -1,6 +1,8 @@
-<nav class="navbar navbar-expand-lg bg-primary shadow-sm" data-bs-theme="dark">
+<nav class="navbar navbar-expand-lg bg-primary shadow-sm" data-bs-theme="dark" *ngIf="showMenu()">
     <div class="container-fluid">
-    <a class="navbar-brand" aria-current="page" href="#">Pró>Eventos</a>
+    <a class="navbar-brand" aria-current="page" href="#">
+        <i class="fa fa-users" aria-hidden="true"></i>
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg"
         aria-controls="navbarOffcanvasLg" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -30,8 +32,8 @@
                         <img src="https://mdbootstrap.com/img/new/avatars/1.webp" class="rounded-circle" height="22" alt="Avatar" loading="lazy" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Meu perfil</a></li>
-                        <li><a class="dropdown-item" href="#">Sair</a></li>
+                        <li><a class="dropdown-item" routerLink="user/perfil">Meu perfil</a></li>
+                        <li><a class="dropdown-item" routerLink="user/login">Sair</a></li>
                     </ul>
                 </li>
             </ul>

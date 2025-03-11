@@ -1,7 +1,7 @@
 import {
   DOCUMENT,
   isPlatformBrowser
-} from "./chunk-N7HKFVPJ.js";
+} from "./chunk-7F4KR3KK.js";
 import {
   ApplicationRef,
   ComponentFactoryResolver$1,
@@ -15,8 +15,6 @@ import {
   RendererFactory2,
   Subject,
   TemplateRef,
-  __spreadProps,
-  __spreadValues,
   animationFrameScheduler,
   fromEvent,
   isDevMode,
@@ -25,7 +23,11 @@ import {
   setClassMetadata,
   ɵɵdefineInjectable,
   ɵɵinject
-} from "./chunk-VWNYEFNH.js";
+} from "./chunk-R3VAZ7SQ.js";
+import {
+  __spreadProps,
+  __spreadValues
+} from "./chunk-EPAV4CNQ.js";
 
 // node_modules/ngx-bootstrap/utils/fesm2022/ngx-bootstrap-utils.mjs
 var Trigger = class {
@@ -1439,4 +1441,4 @@ ngx-bootstrap/utils/fesm2022/ngx-bootstrap-utils.mjs:
    * found in the LICENSE file at https://angular.io/license
    *)
 */
-//# sourceMappingURL=chunk-QRW7HVIE.js.map
+//# sourceMappingURL=chunk-MSWWWYLN.js.map

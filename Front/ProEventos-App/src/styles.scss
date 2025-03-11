@@ -1,6 +1,6 @@
 @use 'bootstrap/scss/bootstrap' as *;
-@use 'bootswatch/dist/journal/variables' as minty-variables;
-@use 'bootswatch/dist/journal/bootstrap' as minty-bootstrap;
+@use 'bootswatch/dist/superhero/variables' as minty-variables;
+@use 'bootswatch/dist/superhero/bootstrap' as minty-bootstrap;
 @use 'ngx-toastr/toastr';
 @use 'ngx-spinner/animations/ball-scale-multiple';
 @use 'ngx-spinner/animations/ball-clip-rotate';
@@ -8,3 +8,17 @@
 * {
     font-family: Roboto;
 }
+
+html, body {
+    overflow: auto;
+    height: 100%;
+}
+
+.rounded {
+    border-radius: 8px !important;
+}
+  
+.rounded-lg {
+    border-radius: 8px !important;
+}
+  

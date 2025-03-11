@@ -3,6 +3,20 @@
     "development"
   ],
   "hints": {
-    "axe/name-role-value": "off"
+    "axe/name-role-value": "off",
+    "axe/forms": [
+      "default",
+      {
+        "label": "off",
+        "select-name": "off"
+      }
+    ],
+    "axe/text-alternatives": [
+      "default",
+      {
+        "image-alt": "off"
+      }
+    ],
+    "button-type": "off"
   }
 }
