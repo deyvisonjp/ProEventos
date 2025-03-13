@@ -4,12 +4,12 @@ import {
   Utils,
   document as document2,
   win
-} from "./chunk-MSWWWYLN.js";
+} from "./chunk-QRW7HVIE.js";
 import {
   CommonModule,
   DOCUMENT,
   isPlatformBrowser
-} from "./chunk-7F4KR3KK.js";
+} from "./chunk-N7HKFVPJ.js";
 import {
   Component,
   Directive,
@@ -47,8 +47,7 @@ import {
   ɵɵprojection,
   ɵɵprojectionDef,
   ɵɵresolveWindow
-} from "./chunk-R3VAZ7SQ.js";
-import "./chunk-EPAV4CNQ.js";
+} from "./chunk-VWNYEFNH.js";
 
 // node_modules/ngx-bootstrap/focus-trap/fesm2022/ngx-bootstrap-focus-trap.mjs
 function coerceBooleanProperty(value) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -7,9 +7,9 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
-import { DateTimeFormatPipe } from '../../../helpers/date-time-format.pipe';
-import { Evento } from '../../../models/evento';
-import { EventoService } from '../../../services/evento.service';
+import { DateTimeFormatPipe } from '@app/helpers/date-time-format.pipe';
+import { Evento } from '@app/models/evento';
+import { EventoService } from '@app/services/evento.service';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
