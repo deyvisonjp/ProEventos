@@ -1,16 +1,16 @@
 <app-titulo-da-pagina [titulo]="'Perfil'" />
 
 <div class="perfil card rounded shadow-sm p-3">
-  <form>
+  <form [formGroup]="perfilForm">
     <div class="row">
       <!-- Coluna da imagem e informações do usuário -->
       <div class="col-lg-3">
         <div class="card mb-3">
           <div class="card-header"></div>
           <div class="d-flex justify-content-center pt-3">
-            <img src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R" 
-                 width="120" height="120" 
-                 class="rounded-circle" alt="Imagem de perfil">
+            <img
+              src="https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRbezqZpEuwGSvitKy3wrwnth5kysKdRqBW54cAszm_wiutku3R"
+              width="120" height="120" class="rounded-circle" alt="Imagem de perfil">
           </div>
           <div class="card-body text-center">
             <h4 class="mb-3">UserName</h4>
@@ -32,14 +32,14 @@
           <div class="card-footer"></div>
         </div>
       </div>
-      
+
       <!-- Coluna do formulário -->
       <div class="col-lg-9">
         <h3 class="border-bottom pb-2">Detalhe Perfil</h3>
         <div class="row">
           <div class="form-group col-md-4">
             <label>Título</label>
-            <select class="form-control">
+            <select class="form-control" formControlName="titulo" [ngClass]="{'is-invalid': perfilForm.get('titulo')?.invalid && perfilForm.get('titulo')?.touched}">
               <option value=""></option>
               <option value="0">Não Quero</option>
               <option value="Tecnólogo(a)">Tecnólogo(a)</option>
@@ -50,39 +50,63 @@
               <option value="Doutor(a)">Doutor(a)</option>
               <option value="Pós Doc">Pós Doc</option>
             </select>
+            <div class="invalid-feedback" *ngIf="validaForm.titulo?.errors?.['required']">
+              O campo "Título" é obrigatório
+            </div>
           </div>
           <div class="form-group col-md-4">
             <label>Primeiro Nome</label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" formControlName="primeiroNome" [ngClass]="{'is-invalid': perfilForm.get('primeiroNome')?.invalid && perfilForm.get('primeiroNome')?.touched}" />
+            <div class="invalid-feedback" *ngIf="validaForm.primeiroNome?.errors?.['required']">
+              O campo "Primeiro Nome" é obrigatório
+            </div>
           </div>
           <div class="form-group col-md-4">
             <label>Último Nome</label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" formControlName="ultimoNome" [ngClass]="{'is-invalid': perfilForm.get('ultimoNome')?.invalid && perfilForm.get('ultimoNome')?.touched}" />
+            <div class="invalid-feedback" *ngIf="validaForm.ultimoNome?.errors?.['required']">
+              O campo "Último Nome" é obrigatório
+            </div>
           </div>
         </div>
 
         <div class="row">
           <div class="form-group col-md-5">
             <label>E-mail</label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" formControlName="email" [ngClass]="{'is-invalid': perfilForm.get('email')?.invalid && perfilForm.get('email')?.touched}" />
+            <div class="invalid-feedback" *ngIf="validaForm.email?.errors?.['required']">
+              O campo "E-mail" é obrigatório
+            </div>
+            <div class="invalid-feedback" *ngIf="validaForm.email?.errors?.['email']">
+              O campo "E-mail" deve ser um endereço de e-mail válido
+            </div>
           </div>
           <div class="form-group col-md-4">
             <label>Telefone</label>
-            <input type="text" class="form-control" />
+            <input type="text" class="form-control" formControlName="telefone" [ngClass]="{'is-invalid': perfilForm.get('telefone')?.invalid && perfilForm.get('telefone')?.touched}" />
+            <div class="invalid-feedback" *ngIf="validaForm.telefone?.errors?.['required']">
+              O campo "Telefone" é obrigatório
+            </div>
           </div>
           <div class="form-group col-md-3">
             <label>Função</label>
-            <select class="form-control">
+            <select class="form-control" formControlName="funcao" [ngClass]="{'is-invalid': perfilForm.get('funcao')?.invalid && perfilForm.get('funcao')?.touched}">
               <option value=""></option>
               <option value="Participante">Participante</option>
               <option value="Palestrante">Palestrante</option>
             </select>
+            <div class="invalid-feedback" *ngIf="validaForm.funcao?.errors?.['required']">
+              O campo "Função" é obrigatório
+            </div>
           </div>
         </div>
-        
+
         <div class="form-group">
           <label>Descrição</label>
-          <input type="text" class="form-control" />
+          <input type="text" class="form-control" formControlName="descricao" [ngClass]="{'is-invalid': perfilForm.get('descricao')?.invalid && perfilForm.get('descricao')?.touched}" />
+          <div class="invalid-feedback" *ngIf="validaForm.descricao?.errors?.['required']">
+            O campo "Descrição" é obrigatório
+          </div>
         </div>
 
         <h3 class="border-bottom pb-2 pt-3">Mudar Senha</h3>
@@ -91,19 +115,39 @@
         <div class="row">
           <div class="form-group col-md-6">
             <label>Senha</label>
-            <input type="password" class="form-control" />
+            <input type="password" class="form-control" formControlName="password" 
+              [ngClass]="{'is-invalid': perfilForm.get('password')?.invalid 
+              && perfilForm.get('password')?.touched}"  
+            />
+            <div class="invalid-feedback" *ngIf="validaForm.password?.errors?.['required']">
+              O campo "Senha" é obrigatório
+            </div>
+            <div class="invalid-feedback" *ngIf="validaForm.password?.errors?.['minlength']">
+              Deve ter no mínimo 6 caracteres
+            </div>
           </div>
           <div class="form-group col-md-6">
             <label>Confirmar Senha</label>
-            <input type="password" class="form-control" />
+            <input type="password" class="form-control" formControlName="passwordConfirmed" 
+              [ngClass]="{'is-invalid': perfilForm.get('passwordConfirmed')?.invalid 
+                && perfilForm.get('passwordConfirmed')?.touched}"
+            />
+            <div class="invalid-feedback" *ngIf="validaForm.passwordConfirmed?.errors?.['required']">
+              O campo "Confirmação de senha" é obrigatório
+            </div>
+            <div class="invalid-feedback" *ngIf="validaForm.passwordConfirmed?.errors?.['mustMatch'] && validaForm.passwordConfirmed?.touched">
+              A senha não confere, corrija por favor!
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="card-footer d-flex justify-content-end mt-3">
-      <button class="btn btn-outline-warning me-2">Cancelar Alteração</button>
-      <button class="btn btn-success">
+      <button class="btn btn-outline-warning me-2" (click)="resetForm($event)">
+        Cancelar Alteração
+      </button>
+      <button class="btn btn-success" [disabled]="!perfilForm.valid">
         <span class="spinner-border spinner-border-sm mr-1 me-2"></span>
         Salvar Alteração
       </button>

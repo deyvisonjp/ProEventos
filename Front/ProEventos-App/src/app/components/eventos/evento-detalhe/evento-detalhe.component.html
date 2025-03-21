@@ -1,6 +1,11 @@
 <div class="card rounded shadow-sm p-2">
     <form [formGroup]="eventosDetalhesForm">
+
       <div class="p-3">
+
+        <!-- <p>Form value: {{ eventosDetalhesForm.value | json}}</p>
+        <p>Form valid: {{ eventosDetalhesForm.status | json}}</p> -->
+
         <div class="row pb-3">
           <div class="form-group col-md-12">
             <label>Tema</label>
@@ -15,78 +20,84 @@
             </div>
           </div>
         </div>
+
         <div class="row pb-3">
           <div class="form-group col-md-8">
             <label>Local</label>
             <input type="text" class="form-control" formControlName="local"
-              [ngClass]="{'is-invalid': eventosDetalhesForm.get('local')?.invalid && eventosDetalhesForm.get('local')?.touched}"
+              [ngClass]="{'is-invalid': validaForm.local?.invalid && validaForm.local?.touched}"
               placeholder="Insira o Local">
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('local')?.errors?.['required']">
+            <div class="invalid-feedback">
               O campo Local é obrigatório
             </div>
           </div>
           <div class="form-group col-md-4">
             <label>Data e Hora</label>
             <input type="datetime-local" class="form-control" formControlName="dataEvento"
-              [ngClass]="{'is-invalid': eventosDetalhesForm.get('dataEvento')?.invalid && eventosDetalhesForm.get('dataEvento')?.touched}"
+              [ngClass]="{
+                    'is-invalid': validaForm.dataEvento?.invalid && validaForm.dataEvento?.touched
+                }"
               placeholder="Insira a Data e Hora">
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('dataEvento')?.errors?.['required']">
+            <div class="invalid-feedback" *ngIf="validaForm.dataEvento?.errors?.['required']">
               O campo Data e Hora é obrigatório
             </div>
           </div>
         </div>
+
         <div class="row pb-3">
           <div class="form-group col-md-2">
             <label>Qtd Pessoas</label>
             <input type="number" class="form-control" formControlName="quantidadeDePessoas"
-              [ngClass]="{'is-invalid': eventosDetalhesForm.get('quantidadeDePessoas')?.invalid && eventosDetalhesForm.get('quantidadeDePessoas')?.touched}"
+              [ngClass]="{'is-invalid': validaForm.quantidadeDePessoas?.invalid && validaForm.quantidadeDePessoas?.touched}"
               placeholder="Insira a Quantidade de Pessoas">
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('quantidadeDePessoas')?.errors?.['required']">
-              O campo Quantidade de Pessoas é obrigatório e deve ser pelo menos 1
+            <div class="invalid-feedback" *ngIf="validaForm.quantidadeDePessoas?.errors?.['required']">
+              O campo Quantidade de Pessoas é obrigatório e deve conter no mínimo 30 pessoas.
             </div>
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('quantidadeDePessoas')?.errors?.['min']">
-              Deve ser pelo menos 1
+            <div class="invalid-feedback" *ngIf="validaForm.quantidadeDePessoas?.errors?.['min']">
+              Deve conter no mínimo 30 pessoas.
             </div>
           </div>
           <div class="form-group col-md-2">
             <label>Telefone</label>
             <input type="text" class="form-control" formControlName="telefone"
-              [ngClass]="{'is-invalid': eventosDetalhesForm.get('telefone')?.invalid && eventosDetalhesForm.get('telefone')?.touched}"
+              [ngClass]="{'is-invalid': validaForm.telefone?.invalid && validaForm.telefone?.touched}"
               placeholder="(000) 90000-0000">
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('telefone')?.errors?.['required']">
+            <div class="invalid-feedback" *ngIf="validaForm.telefone?.errors?.['required']">
               O campo Telefone é obrigatório
             </div>
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('telefone')?.errors?.['pattern']">
+            <div class="invalid-feedback" *ngIf="validaForm.telefone?.errors?.['pattern']">
               Deve ter 10 a 11 dígitos
             </div>
           </div>
           <div class="form-group col-md-4">
             <label>E-mail</label>
             <input type="email" class="form-control" formControlName="email"
-              [ngClass]="{'is-invalid': eventosDetalhesForm.get('email')?.invalid && eventosDetalhesForm.get('email')?.touched}"
+              [ngClass]="{'is-invalid': validaForm.email?.invalid && validaForm.email?.touched}"
               placeholder="Insira o E-mail">
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('email')?.errors?.['required']">
+            <div class="invalid-feedback" *ngIf="validaForm.email?.errors?.['required']">
               O e-mail é obrigatório
             </div>
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('email')?.errors?.['email']">
+            <div class="invalid-feedback" *ngIf="validaForm.email?.errors?.['email']">
               Insira um e-mail válido
             </div>
           </div>
+
           <div class="form-group col-md-4">
             <label>Imagem</label>
             <input type="text" class="form-control" formControlName="imagemUrl"
-              [ngClass]="{'is-invalid': eventosDetalhesForm.get('imagemUrl')?.invalid && eventosDetalhesForm.get('imagemUrl')?.touched}"
+              [ngClass]="{'is-invalid': validaForm.imagemUrl?.invalid && validaForm.imagemUrl?.touched}"
               placeholder="Imagem do local do evento">
-            <div class="invalid-feedback" *ngIf="eventosDetalhesForm.get('imagemUrl')?.errors?.['required']">
+            <div class="invalid-feedback" *ngIf="validaForm.imagemUrl?.errors?.['required']">
               O campo Imagem é obrigatório
             </div>
           </div>
         </div>
+
       </div>
   
       <div class="card-footer d-flex justify-content-end mt-3 p-3">
-        <button class="btn btn-outline-warning me-2" type="button">Cancelar Alteração</button>
-        <button class="btn btn-success" type="submit" [disabled]="eventosDetalhesForm.invalid">
+        <button class="btn btn-outline-warning me-2" type="button" (click)="resetForm()">Cancelar Alteração</button>
+        <button class="btn btn-success" type="submit" [disabled]="!eventosDetalhesForm.valid">
           <span class="spinner-border spinner-border-sm mr-1 me-2"></span>
           Salvar Alteração
         </button>

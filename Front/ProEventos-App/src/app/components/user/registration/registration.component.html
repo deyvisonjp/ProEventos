@@ -4,33 +4,82 @@
       <h1 class="fw-bold">Cadastro de Usuário</h1>
       <img src="../../../../assets/registration.png" class="my-4 img-fluid rounded" alt="Cadastro" width="400">
     </div>
-    
+
     <div class="col-md-6 d-flex align-items-center justify-content-center">
       <div class="card shadow-lg p-4 border-0 rounded w-100 mx-3">
         <div class="card-body text-center">
           <i class="fa fa-user-plus fa-3x text-primary mb-3"></i>
           <h2 class="h4 mb-4">Crie sua conta</h2>
-          
-          <form>
+
+          <form [formGroup]="registrationForm">
             <div class="mb-3">
-              <input type="text" id="name" class="form-control text-center rounded" placeholder="Nome completo" name="name" required>
-            </div>
-            
-            <div class="mb-3">
-              <input type="email" id="email" class="form-control text-center rounded" placeholder="Digite seu e-mail" name="email" required>
+              <input type="text" 
+                class="form-control text-center rounded" formControlName="primeiroNome"
+                placeholder="Primeiro Nome"
+                name="primeiroNome" 
+                [ngClass]="{'is-invalid': registrationForm.get('primeiroNome')?.invalid && registrationForm.get('primeiroNome')?.touched}">
+              <div class="invalid-feedback">
+                O campo "Primeiro nome" é obrigatório.
+              </div>
             </div>
 
             <div class="mb-3">
-              <input type="password" id="password" class="form-control text-center rounded" placeholder="Crie uma senha" name="password" required>
-            </div>
-            
-            <div class="mb-3">
-              <input type="password" id="passwordConfirmed" class="form-control text-center rounded" placeholder="Confirme sua senha" name="passwordConfirmed" required>
+              <input type="text" class="form-control text-center rounded" 
+                placeholder="Último nome"
+                formControlName="ultimoNome"
+                name="ultimoNome" [ngClass]="{'is-invalid': registrationForm.get('ultimoNome')?.invalid && registrationForm.get('ultimoNome')?.touched}">
+                <div class="invalid-feedback">
+                  O campo "Último nome" é obrigatório.
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100 rounded">Cadastrar</button>
+            <div class="mb-3">
+              <input type="email" class="form-control text-center rounded" 
+                placeholder="Digite seu e-mail"
+                formControlName="email"
+                [ngClass]="{'is-invalid': registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched}">
+                <div class="invalid-feedback" *ngIf="validaForm.email?.errors?.['required']">
+                  O e-mail é obrigatório
+                </div>
+                <div class="invalid-feedback" *ngIf="validaForm.email?.errors?.['email']">
+                  Insira um e-mail válido
+                </div>
+            </div>
+
+            <div class="mb-3">
+              <input type="password" 
+                class="form-control text-center rounded" 
+                placeholder="Crie uma senha"
+                formControlName="password"
+                [ngClass]="{'is-invalid': registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched}">
+                <div class="invalid-feedback" *ngIf="validaForm.password?.errors?.['required']">
+                  O campo "Senha" é obrigatório
+                </div>
+                <div class="invalid-feedback" *ngIf="validaForm.password?.errors?.['minlength']">
+                  Deve ter no mínimo 6 caracteres
+                </div>
+            </div>
+
+            <div class="mb-3">
+              <input type="password" id="passwordConfirmed" class="form-control text-center rounded"
+                placeholder="Confirme sua senha"
+                formControlName="passwordConfirmed"
+                [ngClass]="{'is-invalid': registrationForm.get('passwordConfirmed')?.invalid && registrationForm.get('passwordConfirmed')?.touched}">
+              <div class="invalid-feedback" *ngIf="validaForm.passwordConfirmed?.errors?.['required']">
+                O campo "Confirmação de senha" é obrigatório
+              </div>
+              <div class="invalid-feedback" *ngIf="validaForm.passwordConfirmed?.errors?.['mustMatch'] && validaForm.passwordConfirmed?.touched">
+                A senha não confere, corrija por favor!
+              </div>
+            </div>
+
+            <button type="submit" 
+              class="btn btn-primary w-100 rounded"
+              [disabled]="!registrationForm.valid">
+              Salvar
+            </button>
           </form>
-          
+
           <p class="mt-4 text-muted">Já tem uma conta? Faça login abaixo</p>
           <button class="btn btn-outline-primary w-100 rounded" routerLink="/user/login">Entrar</button>
         </div>
