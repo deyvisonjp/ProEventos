@@ -4,6 +4,7 @@
 @use 'ngx-toastr/toastr';
 @use 'ngx-spinner/animations/ball-scale-multiple';
 @use 'ngx-spinner/animations/ball-clip-rotate';
+@import 'ngx-bootstrap/datepicker/bs-datepicker.css';
 
 * {
     font-family: Roboto;

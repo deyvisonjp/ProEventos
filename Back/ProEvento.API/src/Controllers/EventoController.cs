@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using ProEvento.Application.DTOs;
 using ProEvento.Application.Intefaces;
-using ProEvento.Application.Services;
 using ProEvento.Domain.Models;
-using System.Threading.Tasks;
 
 namespace ProEvento.API.Controllers
 {
@@ -27,14 +26,16 @@ namespace ProEvento.API.Controllers
 
             try
             {
-                var eventos = await _eventoService.ObterEventosAsync(true);
+                var eventosDto = await _eventoService.ObterEventosAsync(true);
 
-                if (eventos == null)
+                if (eventosDto == null)
                 {
-                    return NotFound("Não foram encontrados eventos cadastrados.");
+                    return NoContent();
                 }
 
-                return Ok(eventos);
+                //var eventosDto = new List<EventoDto>();
+
+                return Ok(eventosDto);
             }
             catch (Exception ex)
             {
@@ -56,7 +57,7 @@ namespace ProEvento.API.Controllers
 
                 if (evento == null)
                 {
-                    return NotFound($"Evento com ID {id} não foi encontrado.");
+                    return NoContent();
                 }
 
                 return Ok(evento);
@@ -93,7 +94,7 @@ namespace ProEvento.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostEvento(Evento createEvento)
+        public async Task<IActionResult> PostEvento(EventoDto createEvento)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +107,7 @@ namespace ProEvento.API.Controllers
 
                 if (evento == null)
                 {
-                    return BadRequest("Não foi possível criar o evento, favor revise o formulário.");
+                    return NoContent();
                 }
 
                 return Ok(evento);
@@ -118,7 +119,7 @@ namespace ProEvento.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvento(int id, Evento updateEvento)
+        public async Task<IActionResult> PutEvento(int id, EventoDto updateEvento)
         {
             if (!ModelState.IsValid)
             {
@@ -127,20 +128,21 @@ namespace ProEvento.API.Controllers
 
             try
             {
-                var evento = await _eventoService.UpdateEventos(id, updateEvento);
+                var eventoDto = await _eventoService.UpdateEventos(id, updateEvento);
 
-                if (evento == null)
+                if (eventoDto == null)
                 {
-                    return BadRequest($"Não foi possível atualizar o evento, favor revise o forumulário.");
+                    return BadRequest("Não foi possível atualizar o evento, favor revise o formulário.");
                 }
 
-                return Ok(evento);
+                return Ok(eventoDto);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Atualizar Elemento -Erro interno do servidor: {ex.Message}");
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
             }
         }
+
 
 
         [HttpDelete("{id}")]
@@ -153,9 +155,13 @@ namespace ProEvento.API.Controllers
 
             try
             {
-                return await _eventoService.DeleteEvento(id) 
-                    ? Ok("Evento Deletado")
-                    : BadRequest($"Evento não encontrado.");
+
+                var evento = await _eventoService.ObterEventoPorIdAsync(id, true);
+                if (evento == null) return NoContent();
+
+                return await _eventoService.DeleteEvento(id)
+                    ? Ok(new { success = true, message = "Evento Deletado" })
+                    : throw new Exception("Ocorreu um erro ao tentar deletar o evento");
                 
             }
             catch (Exception ex)

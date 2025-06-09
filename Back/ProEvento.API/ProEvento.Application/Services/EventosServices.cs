@@ -1,4 +1,7 @@
-﻿using ProEvento.Application.Intefaces;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
+using ProEvento.Application.DTOs;
+using ProEvento.Application.Intefaces;
 using ProEvento.Domain.Interfaces;
 using ProEvento.Domain.Models;
 
@@ -8,19 +11,25 @@ public class EventosServices : IEventosServices
 {
     private readonly IProEventosRepository _proEventosRepository;
     private readonly IEventosRepository _eventosRepository;
-    public EventosServices(IProEventosRepository proEventosRepository, IEventosRepository eventosRepository)
+    private readonly IMapper _mapper;
+    public EventosServices(IProEventosRepository proEventosRepository, IEventosRepository eventosRepository, IMapper mapper)
     {
         _proEventosRepository = proEventosRepository;
         _eventosRepository = eventosRepository;
+        _mapper = mapper;
     }
-    public async Task<Evento> AddEventos(Evento eventoModel)
+    public async Task<EventoDto> AddEventos(EventoDto eventoModel)
     {
         try
         {
-            _proEventosRepository.Add<Evento>(eventoModel);
+            var evento = _mapper.Map<Evento>(eventoModel);
+            _proEventosRepository.Add<Evento>(evento);
+
             if (await _proEventosRepository.SaveChangesAsync()) 
             {
-                return await _eventosRepository.ObterEventoPorIdAsync(eventoModel.Id, false);
+                var eventoRetorno = await _eventosRepository.ObterEventoPorIdAsync(evento.Id, false);
+
+                return _mapper.Map<EventoDto>(eventoRetorno);
             }
 
             return null;
@@ -30,13 +39,16 @@ public class EventosServices : IEventosServices
             throw new Exception($"Erro ao tentar adicionar o Evento - Erro: {ex}");
         }
     }
-    public async Task<Evento[]> ObterEventosAsync(bool includePalestrantes)
+    public async Task<EventoDto[]> ObterEventosAsync(bool includePalestrantes)
     {
         try
         {
             var eventos = await _eventosRepository.ObterEventosAsync(includePalestrantes);
             if (eventos == null) return null;
-            return eventos;
+
+            EventoDto[] eventoDto = _mapper.Map<EventoDto[]>(eventos);
+
+            return eventoDto;
         }
         catch (Exception ex) 
         {
@@ -44,13 +56,16 @@ public class EventosServices : IEventosServices
         }
     }
 
-    public async Task<Evento> ObterEventoPorIdAsync(int id, bool includePalestrantes)
+    public async Task<EventoDto> ObterEventoPorIdAsync(int id, bool includePalestrantes)
     {
         try
         {
-            var evento = await _eventosRepository.ObterEventoPorIdAsync(id, includePalestrantes);
+            Evento evento = await _eventosRepository.ObterEventoPorIdAsync(id, includePalestrantes);
             if (evento == null) return null;
-            return evento;
+
+            EventoDto eventoDto = _mapper.Map<EventoDto>(evento);
+
+            return eventoDto;
         }
         catch (Exception ex)
         {
@@ -58,13 +73,15 @@ public class EventosServices : IEventosServices
         }
     }
 
-    public async Task<Evento[]> ObterEventosPorTemaAsync(string tema, bool includePalestrantes)
+    public async Task<EventoDto[]> ObterEventosPorTemaAsync(string tema, bool includePalestrantes)
     {
         try
         {
             var eventos = await _eventosRepository.ObterEventosPorTemaAsync(tema, includePalestrantes);
             if (eventos == null) return null;
-            return eventos;
+            EventoDto[] eventoDto = _mapper.Map<EventoDto[]>(eventos);
+
+            return eventoDto;
         }
         catch (Exception ex)
         {
@@ -72,7 +89,7 @@ public class EventosServices : IEventosServices
         }
     }
 
-    public async Task<Evento> UpdateEventos(int eventoId, Evento eventoUpdate)
+    public async Task<EventoDto> UpdateEventos(int eventoId, EventoDto eventoUpdate)
     {
         try
         {
@@ -80,17 +97,24 @@ public class EventosServices : IEventosServices
 
             if (evento == null) return null;
 
-            _proEventosRepository.Update(eventoUpdate);
+            _mapper.Map(eventoUpdate, evento);
+
+            _proEventosRepository.Update(evento);
 
             if (await _proEventosRepository.SaveChangesAsync())
             {
-                return await _eventosRepository.ObterEventoPorIdAsync(evento.Id, false);
+                var eventoRetorno = await _eventosRepository.ObterEventoPorIdAsync(evento.Id, false);
+                return _mapper.Map<EventoDto>(eventoRetorno);
             }
 
             return null;
         }
-        catch (Exception ex) { throw new Exception($"Erro ao tentar adicionar o Evento - Erro: {ex}"); }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao tentar atualizar o Evento - Erro: {ex.Message}");
+        }
     }
+
 
     public async Task<bool> DeleteEvento(int eventoId)
     {

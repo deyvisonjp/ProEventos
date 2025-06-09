@@ -17,6 +17,10 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     provideHttpClient(), 
     importProvidersFrom(ModalModule.forRoot()),
-    provideToastr(),
+    provideToastr({
+      timeOut: 10000,
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true,
+    }),
   ]
 }).catch(err => console.error(err));

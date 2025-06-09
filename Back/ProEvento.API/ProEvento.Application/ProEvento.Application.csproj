@@ -11,13 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <PackageReference Include="AutoMapper" Version="14.0.0" />
     <ProjectReference Include="..\ProEvento.Domain\ProEvento.Domain.csproj" />
     <ProjectReference Include="..\ProEvento.Persistence\ProEvento.Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Mappers\" />
-    <Folder Include="DTOs\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 	

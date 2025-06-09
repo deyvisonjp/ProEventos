@@ -34,6 +34,8 @@ export class EventoListaComponent {
   larguraImagem: number = 100;
   exibirImagem: boolean = true;
   private _filtroListaEventos: string = '';
+  public eventoTema = '';
+  public eventoId = 0;
 
   modalRef?: BsModalRef;
   message?: string;
@@ -97,16 +99,43 @@ export class EventoListaComponent {
   }
 
   // Configurações Modal ngx-bootstrap
-  openModal(template: TemplateRef<void>): void {
+  openModal(event: any, template: TemplateRef<void>, eventoTema: string, eventoId: number): void {
+    event.stopPropagation();
+    this.eventoTema = eventoTema;
+    this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('O Evento foi deletado com sucesso!', 'Deletado!', {
-      timeOut: 10000,
-      positionClass: 'toast-bottom-right',
-      progressBar: true,
+    this.spinner.show();
+
+    this.EventoService.delete(this.eventoId).subscribe({
+      next: (response: any) => {
+        if (response.success) {
+          this.toastr.success(
+            `O Evento ${this.eventoTema} foi deletado com sucesso!`,
+            'Deletado!',
+            {
+              timeOut: 10000,
+              positionClass: 'toast-bottom-right',
+              progressBar: true,
+            }
+          );
+          this.getEventos();
+          // this.eventos = this.eventos.filter(evento => evento.id !== this.eventoId);
+          // this.eventosFiltrados = this.eventos;
+        } else {
+          this.toastr.error(`Resposta inesperada ao deletar o evento ${this.eventoTema}.`);
+        }
+        this.spinner.hide();
+      },
+      error: (error) => {
+        console.error(error);
+        this.toastr.error(`Erro ao tentar deletar o evento ${this.eventoTema}.`);
+        this.spinner.hide();
+      },
+      complete: () => this.spinner.hide()
     });
   }
 
