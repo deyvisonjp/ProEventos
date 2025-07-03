@@ -19,10 +19,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Registro do repositório
 builder.Services.AddScoped<IProEventosRepository, ProEventosRepository>();
-builder.Services.AddScoped<IEventosRepository, EventosRepository>();
+builder.Services.AddScoped<IEventoRepository, EventoRepository>();
+builder.Services.AddScoped<ILoteRepository, LoteRepository>();
 
 // Registro do serviço
-builder.Services.AddScoped<IEventosServices, EventosServices>();
+builder.Services.AddScoped<IEventoService, EventosService>();
+builder.Services.AddScoped<ILoteService, LoteService>();
 
 builder.Services.AddCors();
 

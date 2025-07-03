@@ -1,7 +1,7 @@
 ﻿using ProEvento.Application.DTOs;
 
 namespace ProEvento.Application.Intefaces;
-public interface IEventosServices
+public interface IEventoService
 {
     Task<EventoDto> AddEventos(EventoDto eventoModel);
     Task<EventoDto> UpdateEventos(int eventoId, EventoDto eventoModel);

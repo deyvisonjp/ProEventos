@@ -7,12 +7,12 @@ using ProEvento.Domain.Models;
 
 namespace ProEvento.Application.Services;
 
-public class EventosServices : IEventosServices
+public class EventosService : IEventoService
 {
     private readonly IProEventosRepository _proEventosRepository;
-    private readonly IEventosRepository _eventosRepository;
+    private readonly IEventoRepository _eventosRepository;
     private readonly IMapper _mapper;
-    public EventosServices(IProEventosRepository proEventosRepository, IEventosRepository eventosRepository, IMapper mapper)
+    public EventosService(IProEventosRepository proEventosRepository, IEventoRepository eventosRepository, IMapper mapper)
     {
         _proEventosRepository = proEventosRepository;
         _eventosRepository = eventosRepository;

@@ -2,7 +2,7 @@
 
 namespace ProEvento.Domain.Interfaces;
 
-public interface IEventosRepository
+public interface IEventoRepository
 {
     Task<Evento[]> ObterEventosPorTemaAsync(string tema, bool includePalestrantes = false);
     Task<Evento[]> ObterEventosAsync(bool includePalestrantes = false);
