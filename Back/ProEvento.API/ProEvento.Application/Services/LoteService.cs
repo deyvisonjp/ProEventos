@@ -60,7 +60,7 @@ public class LoteService : ILoteService
         {
             var lote = await _loteRepository.ObterLotePorIdsAsync(eventoId, loteId);
 
-            if (lote != null) return null;
+            if (lote == null) return null;
 
             var resultado = _mapper.Map<LoteDto>(lote);
             return resultado;
