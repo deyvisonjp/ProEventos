@@ -27,7 +27,8 @@ import { NgxSpinnerService, Spinner } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { environment } from '@environments/environment';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -35,7 +36,9 @@ defineLocale('pt-br', ptBrLocale);
   selector: 'app-evento-detalhe',
   standalone: true,
   imports: [
-    ReactiveFormsModule, CommonModule, BsDatepickerModule, BsDropdownModule, NgxCurrencyDirective
+    ReactiveFormsModule, CommonModule,
+    BsDatepickerModule, BsDropdownModule,
+    NgxCurrencyDirective, TooltipModule
   ],
   templateUrl: './evento-detalhe.component.html',
   styleUrls: ['./evento-detalhe.component.scss']
@@ -48,6 +51,8 @@ export class EventoDetalheComponent implements OnInit {
   estadoSalvar = 'post';
   eventoId: number = 0;
   loteForm!: FormGroup;
+  imageUrl = 'assets/img/upload.png'
+  file: File | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -64,7 +69,19 @@ export class EventoDetalheComponent implements OnInit {
   ngOnInit(): void {
     this.localeService.use('pt-br');
     this.criarForm();
-    this.carregarEvento();
+
+    this.definirModoOperacao();
+  }
+
+  private definirModoOperacao() {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+    if (id) {
+      this.eventoId = +id;
+      this.estadoSalvar = 'put';
+      this.carregarEvento(this.eventoId);
+    } else {
+      this.estadoSalvar = 'post';
+    }
   }
 
   get bsConfig(): Partial<BsDatepickerConfig> {
@@ -104,22 +121,20 @@ export class EventoDetalheComponent implements OnInit {
       local: this.formBuilder.control('', Validators.required),
       dataEvento: this.formBuilder.control<Date | null>(null, Validators.required),
       quantidadeDePessoas: this.formBuilder.control('', [Validators.required, Validators.min(30)]),
-      imagemUrl: this.formBuilder.control('', Validators.required),
+      imagemUrl: this.formBuilder.control(''),
       telefone: this.formBuilder.control('', [Validators.required, Validators.pattern('^[0-9]{10,11}$')]),
       email: this.formBuilder.control('', [Validators.required, Validators.email]),
       lotes: this.formBuilder.array([])
     });
   }
 
-  carregarEvento(): void {
+  carregarEvento(eventoId: number): void {
 
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    if (id === null) {
+    if (eventoId === null) {
       this.toast.error('Não foi possível encontrar o ID do evento!');
       return;
     }
-    this.eventoId = +id;
-    this.estadoSalvar = 'put';
+    this.eventoId = +eventoId;
     if (this.eventoId === 0) return;
 
     this.spinner.show();
@@ -131,14 +146,15 @@ export class EventoDetalheComponent implements OnInit {
           dataEvento: evento.dataEvento ? new Date(evento.dataEvento) : null
         });
 
+        if (this.evento.imagemUrl !== '') {
+          this.imageUrl = environment.apiUrl + 'resources/images/' + this.evento.imagemUrl;
+        }
+
         this.evento.lotes?.forEach(lote => {
           this.lotes.push(this.criarLoteEValidar({
             ...lote
           }));
         })
-
-        // 2ª forma de obter os this.lotes...
-        // this.carregarLotes();
       },
       error: () => {
         this.toast.error('Erro ao carregar evento');
@@ -190,6 +206,48 @@ export class EventoDetalheComponent implements OnInit {
     return campo && campo.errors && campo.touched ? 'is-invalid' : '';
   }
 
+  // IMAGEM
+  onFileChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) {
+      this.toast.warning('Nenhum arquivo selecionado.', 'Atenção');
+      return;
+    }
+
+    this.file = input.files[0];
+
+    const reader = new FileReader();
+    reader.onload = () => this.imageUrl = reader.result as string;
+    reader.readAsDataURL(this.file);
+
+    this.uploadImage();
+  }
+
+  // Envia a imagem para o back-end
+  uploadImage(): void {
+    if (!this.file) {
+      this.toast.warning('Selecione uma imagem primeiro.', 'Atenção');
+      return;
+    }
+
+    this.spinner.show();
+
+    this.eventoService.postUploadImage(this.eventoId, this.file).subscribe({
+      next: () => {
+        this.toast.success('Imagem atualizada com sucesso!', 'Sucesso');
+        this.carregarEvento(this.eventoId);
+        this.file = null;
+      },
+      error: (error) => {
+        this.toast.error('Erro ao atualizar imagem.', 'Erro');
+        console.error(error);
+      },
+      complete: () => this.spinner.hide()
+    });
+  }
+
+
   // LOTES -----------------------------------------------------------
   retornaTituloLote(nome: string, indice: number): string {
     return nome == null || nome == '' ? `Lote ${indice + 1}` : nome;
@@ -234,8 +292,6 @@ export class EventoDetalheComponent implements OnInit {
         }
       ).add(() => this.spinner.hide());
   }
-
-
 
   removerLote(template: TemplateRef<any>, indice: number): void {
     const idControl = this.lotes.get(indice + '.id');

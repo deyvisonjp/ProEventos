@@ -10,10 +10,12 @@ namespace ProEvento.API.Controllers
     public class EventoController : ControllerBase
     {
         private readonly IEventoService _eventoService;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public EventoController(IEventoService eventoService)
+        public EventoController(IEventoService eventoService, IWebHostEnvironment hostEnvironment)
         {
             _eventoService = eventoService;
+            _hostEnvironment = hostEnvironment;
         }
 
         [HttpGet]
@@ -118,6 +120,39 @@ namespace ProEvento.API.Controllers
             }
         }
 
+        [HttpPost("upload-image/{eventoId}")]
+        public async Task<IActionResult> UploadImage(int eventoId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Revise o formulário!");
+            }
+
+            try
+            {
+                var evento = await _eventoService.ObterEventoPorIdAsync(eventoId, true);
+
+                if (evento == null)
+                {
+                    return NoContent();
+                }
+
+                var file = Request.Form.Files[0];
+                if (file.Length > 0)
+                {
+                    DeleteImage(evento.ImagemUrl);
+                    evento.ImagemUrl = await SaveImage(file);
+                }
+
+                var eventoRetorno = await _eventoService.UpdateEventos(eventoId, evento);
+                return Ok(evento);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEvento(int id, EventoDto updateEvento)
         {
@@ -159,15 +194,59 @@ namespace ProEvento.API.Controllers
                 var evento = await _eventoService.ObterEventoPorIdAsync(id, true);
                 if (evento == null) return NoContent();
 
-                return await _eventoService.DeleteEvento(id)
-                    ? Ok(new { success = true, message = "Evento Deletado" })
-                    : throw new Exception("Ocorreu um erro ao tentar deletar o evento");
-                
+                if (await _eventoService.DeleteEvento(id))
+                {
+                    DeleteImage(evento.ImagemUrl);
+                    return Ok(new { success = true, message = "Evento Deletado" });
+                }
+                else
+                {
+                    throw new Exception("Ocorreu um erro ao tentar deletar o evento");
+                }
+
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Remover Evento - Erro interno do servidor: {ex.Message}");
             }
+        }
+
+        //Não poderá ser acessado fora da API (NonAction)
+        [NonAction]
+        private void DeleteImage(string imagemUrl)
+        {
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/Images", imagemUrl);
+
+            if (System.IO.File.Exists(imagePath))
+                System.IO.File.Delete(imagePath);
+        }
+
+        [NonAction]
+        private async Task<string> SaveImage(IFormFile file)
+        {
+            string imageName = new string(Path
+                .GetFileNameWithoutExtension(file.FileName)
+                .Take(10)
+                .ToArray()
+                ).Replace(' ', '-');
+
+            imageName = $"{imageName}_{DateTime.UtcNow:yyMMddHHmmss}{Path.GetExtension(file.FileName)}";
+
+            // Caminho físico onde será salva a imagem
+            var imageFolder = Path.Combine(_hostEnvironment.ContentRootPath, "Resources", "Images");
+
+            if (!Directory.Exists(imageFolder))
+                Directory.CreateDirectory(imageFolder);
+
+            var imagePath = Path.Combine(imageFolder, imageName);
+
+            // Salva a imagem fisicamente
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return imageName;
         }
     }
 }

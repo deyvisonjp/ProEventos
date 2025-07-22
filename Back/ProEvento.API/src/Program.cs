@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using ProEvento.Application.Intefaces;
 using ProEvento.Application.Services;
 using ProEvento.Domain.Interfaces;
@@ -50,6 +51,13 @@ app.UseCors(c => c.AllowAnyHeader()
     .AllowAnyMethod()
     .AllowAnyOrigin()
 );
+
+//Configuração para Upload de arquivos
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+    RequestPath = new PathString("/Resources")
+});
 
 app.UseHttpsRedirection();
 

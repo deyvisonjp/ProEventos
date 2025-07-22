@@ -11,6 +11,7 @@ import { DateTimeFormatPipe } from '@app/helpers/date-time-format.pipe';
 import { Evento } from '@app/models/evento';
 import { EventoService } from '@app/services/evento.service';
 import { Router, RouterLink } from '@angular/router';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'app-evento-lista',
@@ -96,6 +97,12 @@ export class EventoListaComponent {
 
   ocultarImagem(): void {
     this.exibirImagem = !this.exibirImagem;
+  }
+
+  mostrarImagem(imagemUrl: string): string {
+    return (imagemUrl !== '') 
+      ? `${environment.apiUrl}resources/images/${imagemUrl}` 
+      : 'assets/img/no-image.webp'
   }
 
   // Configurações Modal ngx-bootstrap
